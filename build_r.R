@@ -324,7 +324,7 @@ result <- file.copy(
   , overwrite = TRUE
 )
 .handle_result(result)
-for (src_file in c("lightgbm_R.cpp", "lightgbm_R.h", "R_object_helper.h")) {
+for (src_file in c("lightgbm_R.cpp", "lightgbm_R.h")) {
   result <- file.copy(
     from = file.path(TEMP_SOURCE_DIR, src_file)
     , to = file.path(TEMP_SOURCE_DIR, "src", src_file)
@@ -372,7 +372,7 @@ writeLines(description_contents, DESCRIPTION_FILE)
 # CMake-based builds can't currently use R's builtin routine registration,
 # so have to update NAMESPACE manually, with a statement like this:
 #
-# useDynLib(lib_lightgbm, LGBM_GetLastError_R, LGBM_DatasetCreateFromFile_R, ...)
+# useDynLib(lib_lightgbm, LGBM_DatasetCreateFromFile_R, ...)
 #
 # See https://cran.r-project.org/doc/manuals/r-release/R-exts.html#useDynLib for
 # documentation of this approach, where the NAMESPACE file uses a statement like
@@ -386,11 +386,6 @@ dynlib_line <- grep(
 
 c_api_contents <- readLines(file.path(TEMP_SOURCE_DIR, "src", "lightgbm_R.h"))
 c_api_contents <- c_api_contents[grepl("^LIGHTGBM_C_EXPORT", c_api_contents)]
-c_api_contents <- gsub(
-  pattern = "LIGHTGBM_C_EXPORT LGBM_SE "
-  , replacement = ""
-  , x = c_api_contents
-)
 c_api_contents <- gsub(
   pattern = "LIGHTGBM_C_EXPORT SEXP "
   , replacement = ""
